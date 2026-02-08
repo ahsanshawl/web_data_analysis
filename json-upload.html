@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON File Upload</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9ff;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #764ba2;
+            background: #e8ebff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #667eea;
+        }
+
+        .upload-text {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            color: #999;
+            font-size: 14px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
+            margin-top: 20px;
+            padding: 16px;
+            background: #f0f9ff;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .file-size {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .json-preview {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .json-preview.show {
+            display: block;
+        }
+
+        .preview-header {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .json-content {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            max-height: 400px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .error-message {
+            margin-top: 20px;
+            padding: 16px;
+            background: #fee;
+            border-radius: 8px;
+            border-left: 4px solid #f44;
+            color: #c33;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            margin-top: 20px;
+            padding: 16px;
+            background: #efe;
+            border-radius: 8px;
+            border-left: 4px solid #4c4;
+            color: #363;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JSON File Upload</h1>
+        <p class="subtitle">Upload and validate your JSON files</p>
+
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Click to upload or drag and drop</div>
+            <div class="upload-hint">JSON files only</div>
+        </div>
+
+        <input type="file" id="fileInput" accept=".json,application/json">
+
+        <div class="file-info" id="fileInfo">
+            <div class="file-name" id="fileName"></div>
+            <div class="file-size" id="fileSize"></div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✓ JSON file is valid and ready to use!
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="json-preview" id="jsonPreview">
+            <div class="preview-header">Preview:</div>
+            <pre class="json-content" id="jsonContent"></pre>
+        </div>
+
+        <div class="buttons">
+            <button class="btn-secondary" id="clearBtn" disabled>Clear</button>
+            <button class="btn-primary" id="processBtn" disabled>Process JSON</button>
+        </div>
+    </div>
+
+    <script>
+        let uploadedJSON = null;
+
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const jsonPreview = document.getElementById('jsonPreview');
+        const jsonContent = document.getElementById('jsonContent');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const clearBtn = document.getElementById('clearBtn');
+        const processBtn = document.getElementById('processBtn');
+
+        // Click to upload
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            // Reset messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+
+            // Check file type
+            if (!file.name.endsWith('.json') && file.type !== 'application/json') {
+                showError('Please upload a valid JSON file');
+                return;
+            }
+
+            // Show file info
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            fileInfo.classList.add('show');
+
+            // Read file
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+                    uploadedJSON = jsonData;
+                    
+                    // Show preview
+                    jsonContent.textContent = JSON.stringify(jsonData, null, 2);
+                    jsonPreview.classList.add('show');
+                    
+                    // Show success
+                    successMessage.classList.add('show');
+                    
+                    // Enable buttons
+                    clearBtn.disabled = false;
+                    processBtn.disabled = false;
+                    
+                } catch (error) {
+                    showError('Invalid JSON format: ' + error.message);
+                    uploadedJSON = null;
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function showError(message) {
+            errorMessage.textContent = '✗ ' + message;
+            errorMessage.classList.add('show');
+            fileInfo.classList.remove('show');
+            jsonPreview.classList.remove('show');
+            clearBtn.disabled = true;
+            processBtn.disabled = true;
+        }
+
+        clearBtn.addEventListener('click', () => {
+            uploadedJSON = null;
+            fileInput.value = '';
+            fileInfo.classList.remove('show');
+            jsonPreview.classList.remove('show');
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+            clearBtn.disabled = true;
+            processBtn.disabled = true;
+        });
+
+        processBtn.addEventListener('click', () => {
+            if (uploadedJSON) {
+                // Here you can process the JSON data
+                console.log('Processing JSON:', uploadedJSON);
+                alert('JSON data ready to process!\nCheck the console for the data.');
+                
+                // Example: You can send it to a server
+                // fetch('/api/upload', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify(uploadedJSON)
+                // });
+            }
+        });
+    </script>
+</body>
+</html>
