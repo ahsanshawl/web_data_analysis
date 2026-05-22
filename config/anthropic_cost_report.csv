@@ -1,0 +1,48 @@
+FOCUS Dimension,Transform Step,Source Column,Source Column Type,Transform Type,Filters/Process/Etc.
+AvailabilityZone,0,Not Defined,Not Defined,Not Defined,Not Defined
+BillingAccountName,0,Not Defined,Not Defined,Not Defined,Not Defined
+CommitmentDiscountCategory,0,Not Defined,Not Defined,Not Defined,Not Defined
+CommitmentDiscountId,0,Not Defined,Not Defined,Not Defined,Not Defined
+CommitmentDiscountName,0,Not Defined,Not Defined,Not Defined,Not Defined
+CommitmentDiscountType,0,Not Defined,Not Defined,Not Defined,Not Defined
+ListCost,0,Not Defined,Not Defined,Not Defined,Not Defined
+ListUnitPrice,0,Not Defined,Not Defined,Not Defined,Not Defined
+PricingQuantity,0,Not Defined,Not Defined,Not Defined,Not Defined
+PricingUnit,0,Not Defined,Not Defined,Not Defined,Not Defined
+RegionId,0,Not Defined,Not Defined,Not Defined,Not Defined
+ResourceId,0,Not Defined,Not Defined,Not Defined,Not Defined
+ResourceName,0,Not Defined,Not Defined,Not Defined,Not Defined
+ResourceType,0,Not Defined,Not Defined,Not Defined,Not Defined
+SkuId,0,Not Defined,Not Defined,Not Defined,Not Defined
+SkuPriceId,0,Not Defined,Not Defined,Not Defined,Not Defined
+SubAccountName,0,Not Defined,Not Defined,Not Defined,Not Defined
+BilledCost,1,amount,float64,RENAME_COLUMN,
+BillingAccountId,1,organization_id,string,RENAME_COLUMN,
+BillingCurrency,1,currency,string,RENAME_COLUMN,
+BillingPeriodEnd,1,bucket_start,datetime64[us UTC],DATE_TRUNC_MONTH_END,
+BillingPeriodStart,1,bucket_start,datetime64[us UTC],DATE_TRUNC_MONTH_START,
+ChargeCategory,1,cost_type,string,SQL_CONDITION,"conditions:
+- WHEN cost_type = 'tokens' THEN 'Usage'
+default_value: 'Usage'"
+ChargeDescription,1,description,string,RENAME_COLUMN,
+ChargeFrequency,1,NA,Not Defined,ASSIGN_STATIC_VALUE,"static_value: Usage-Based"
+ChargePeriodEnd,1,bucket_end,datetime64[us UTC],RENAME_COLUMN,
+ChargePeriodStart,1,bucket_start,datetime64[us UTC],RENAME_COLUMN,
+ConsumedQuantity,1,token_type,string,JOIN_AGGREGATE,"secondary_source: anthropic/usage_report_messages.parquet
+join_keys: [organization_id, workspace_id, model, service_tier, context_window]
+time_join_key: bucket_start
+time_aggregation: floor_day
+token_type_to_column:
+  uncached_input_tokens: uncached_input_tokens
+  cache_read_input_tokens: cache_read_input_tokens
+  cache_creation_ephemeral_5m_input_tokens: cache_creation_ephemeral_5m_input_tokens
+  cache_creation_ephemeral_1h_input_tokens: cache_creation_ephemeral_1h_input_tokens
+  output_tokens: output_tokens"
+ConsumedUnit,1,token_type,string,RENAME_COLUMN,
+EffectiveCost,1,amount,float64,RENAME_COLUMN,
+InvoiceIssuer,1,NA,Not Defined,ASSIGN_STATIC_VALUE,"static_value: Anthropic"
+Provider,1,NA,Not Defined,ASSIGN_STATIC_VALUE,"static_value: Anthropic"
+Publisher,1,NA,Not Defined,ASSIGN_STATIC_VALUE,"static_value: Anthropic"
+ServiceCategory,1,NA,Not Defined,ASSIGN_STATIC_VALUE,"static_value: AI and Machine Learning"
+ServiceName,1,model,string,RENAME_COLUMN,
+SubAccountId,1,workspace_id,string,RENAME_COLUMN,
