@@ -1,0 +1,5 @@
+provider,billing_account_id,tenant_id,tenant_name
+AWS,111100002222,tenant_001,North Cloud Enterprise
+Azure,7831b4d5-3a91-4f6a-8be1-2e0f1c1c3b9a:abc12345-cdef-6789,tenant_001,North Cloud Enterprise
+GCP,012345-6789AB-CDEF01,tenant_002,North Cloud Analytics
+Anthropic,org_01HYWKXAMP1NJ3F7H8DV0KPLEZ,tenant_001,North Cloud Enterprise

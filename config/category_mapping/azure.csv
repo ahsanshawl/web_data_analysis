@@ -1,0 +1,23 @@
+meter_category,ServiceCategory
+Virtual Machines,Compute
+Storage,Storage
+SQL Database,Database
+Azure Cosmos DB,Database
+App Service,Compute
+Functions,Compute
+Log Analytics,Management and Governance
+Application Gateway,Network
+Bandwidth,Network
+Azure Kubernetes Service,Compute
+Key Vault,Security
+Azure Active Directory,Security
+Azure Monitor,Management and Governance
+Azure DevOps,Developer Tools
+HDInsight,Analytics
+Azure Synapse Analytics,Analytics
+Azure Data Factory,Analytics
+Service Bus,Integration
+Event Hubs,Integration
+API Management,Integration
+Azure Machine Learning,AI and Machine Learning
+Cognitive Services,AI and Machine Learning

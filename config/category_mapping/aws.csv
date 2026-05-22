@@ -1,0 +1,21 @@
+product_code,ServiceCategory
+AmazonEC2,Compute
+AmazonS3,Storage
+AmazonRDS,Database
+AWSLambda,Compute
+AmazonDynamoDB,Database
+AmazonCloudFront,Network
+AmazonCloudWatch,Management and Governance
+AWSELB,Network
+AmazonVPC,Network
+AmazonECR,Developer Tools
+AmazonEKS,Compute
+AmazonECS,Compute
+AWSGlue,Analytics
+AmazonRedshift,Analytics
+AmazonKinesis,Analytics
+AmazonSNS,Integration
+AmazonSQS,Integration
+AWSSecretsManager,Security
+AWSKMS,Security
+AWSConfig,Management and Governance

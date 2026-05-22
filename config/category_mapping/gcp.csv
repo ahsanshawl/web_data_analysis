@@ -1,0 +1,24 @@
+service_description,ServiceCategory
+Compute Engine,Compute
+Cloud Storage,Storage
+BigQuery,Analytics
+Cloud SQL,Database
+Cloud Run,Compute
+Cloud Functions,Compute
+Cloud Pub/Sub,Integration
+Kubernetes Engine,Compute
+Cloud Spanner,Database
+Cloud Bigtable,Database
+Cloud Dataflow,Analytics
+Cloud Composer,Analytics
+Vertex AI,AI and Machine Learning
+Cloud Vision API,AI and Machine Learning
+Cloud Natural Language API,AI and Machine Learning
+Cloud Translation API,AI and Machine Learning
+Cloud DNS,Network
+Cloud Load Balancing,Network
+Cloud CDN,Network
+Cloud Armor,Security
+Cloud Key Management Service,Security
+Cloud Logging,Management and Governance
+Cloud Monitoring,Management and Governance
